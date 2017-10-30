@@ -1,0 +1,7 @@
+#ac-savePubKey, #ac-savePriKey{
+	display: none;
+}
+
+#manageAccount, #manageVirtualAccount, #accountSetting, #transaction{
+	display: none;
+}

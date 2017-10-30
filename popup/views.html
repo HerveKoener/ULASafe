@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/app.css"/>
+	<link href="css/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/vendor/flat-ui/flat-ui.min.css" rel="stylesheet">
+	<link href="css/print.css" type="text/css"  rel="stylesheet" media="print">
+	<link href="css/screen.css" type="text/css"  rel="stylesheet" media="screen">
+	<script type="text/javascript" src="./js/vendor/stellar-sdk.js"></script>
+	<script type="text/javascript" src="./js/vendor/qrcode.js"></script>
+	<script type="text/javascript" src="./js/managers/dataManager.js"></script>
+	<script type="text/javascript" src="./js/managers/stellarGate.js"></script>
+	<script type="text/javascript" src="./js/managers/keyPairManager.js"></script>
+	<script type="text/javascript" src="./js/managers/tagManager.js"></script>
+	<script type="text/javascript" src="./js/managers/rateManager.js"></script>
+  </head>
+
+  <body>
+	<section id="home">
+		<div id="h-info" class="qrow"></div>
+		<div id="h-keys" class="qrow"></div>
+		<div class="qrow"><div class="form-group">
+			<a href="#manageAccount" id="h-add" class="btn btn-block btn-lg btn-primary ">Add</a>
+		</div></div>
+		<h3 class="panel-title" id="h-currency"></h3>
+		<div class="qrow">
+			<div class="col-xs-8"><img src="./img/btc.png" /> BTC</div><div class="col-xs-4" id="h-btc"></div>
+		</div>
+		<div class="qrow">
+			<div class="col-xs-8"><img src="./img/xlm.png" /> XLM</div><div class="col-xs-4" id="h-xlm"></div>
+		</div>
+	</section>
+	<section id="manageAccount">
+		<nav role="navigation">
+			<ul>
+				<li><a href="#home" id="ma-home" >Home</a></li>
+			</ul>
+		</nav>
+		<h2 class="section-title" id="ma-manageAccount">Manage accounts</h2>
+		<div>
+			<h3 class="panel-title" id="ma-updateAccount">Update/Remove account</h3>
+			<div class="qrow"><div>
+				<a href="#ma-selectAll" id="ma-selectAll" >Select all</a>
+			</div></div>
+			<div class="qrow"><div>
+				<a href="#ma-removeTop" id="ma-removeTop" >Remove selected</a>
+			</div></div>
+			<div id="ma-keys"></div>
+			<div class="qrow"><div>
+				<a href="#ma-removeBottom" id="ma-removeBottom" >Remove selected</a>
+			</div></div>
+		</div>
+		<div>
+			<h3 class="panel-title" id="ma-addAccount">Add accounts</h3>
+			<div id="ma-info" class="qrow"></div>
+			<div class="qrow"><div class="form-group">
+				<textarea id="ma-new">copy/paste public or secret keys</textarea>
+			</div></div>
+			<div class="qrow"><div class="form-group">
+				<a href="#manageAccount" id="ma-add"class="btn btn-block btn-lg btn-primary" >Add</a>
+			</div></div>
+			<div class="qrow"><div class="form-group">
+				<a href="#manageAccount" id="ma-create" class="btn btn-block btn-lg btn-primary" >Create new account</a>
+			</div></div>
+		</div>
+    </section>
+	<section id="manageVirtualAccount">
+	</section>
+	<section id="accountSetting">
+		<nav role="navigation">
+			<ul>
+				<li><a href="#home" id="ac-home" >Home</a></li>
+				<li><a href="#transaction" id="ac-transaction" >Send XLM</a></li>
+			</ul>
+		</nav>
+		<h2 class="section-title" id="ac-accountSetting">Account Setting</h2>
+		<div>
+			<h3 class="panel-title" id="ac-updateAccount">Update account</h3>
+			<div id="ac-info" class="qrow"></div>
+			<div class="qrow">
+				<input id="ac-name" type="text" value="" placeholder="Name" class="form-control" />
+			</div>
+			<div class="qrow">
+				<input id="ac-prikey" type="text" value="" placeholder="Private key" class="form-control" />
+			</div>
+			<div class="qrow">
+				<input id="ac-pubkey" type="text" value="" placeholder="Public key" class="form-control" />
+			</div>
+		</div>
+		<div>
+			<h3 class="panel-title" id="ac-freeXLM">Get free XLM</h3>
+			<div class="qrow">
+				<a href="#ac-info" id="ac-inflation" class="btn btn-block btn-lg btn-primary">Join inflation pool</a>
+			</div>
+		</div>
+		<div>
+			<h3 class="panel-title" id="ac-export">Export account</h3>
+			<div class="qrow">
+				<a href="#ac-print" id="ac-print" class="btn btn-block btn-lg btn-primary">Print</a>
+			</div>
+			<div class="qrow">
+				<a href="#ac-email" id="ac-email" class="btn btn-block btn-lg btn-primary">Send by email</a>
+				<span id="ac-email-subject" style='display:none'>Saved stellar account from ULASafe</span>
+				<span id="ac-email-body" style='display:none'>Here are your public and secret keys for your Stellar account.</span>
+			</div>
+			<section id="ac-saveAccount">
+				<h3 class="panel-title" id="ac-paperWallet">Stellar paper wallet</h3>
+				<div class="qrow"><span id="ac-publicKey">Your public key</span>:<br/> <span id="ac-savePubKey"></span><span id="ac-savePubKeyQrcode" class="qrcode"></span></div>
+				<div class="qrow"><span id="ac-privateKey">Your secret key</span>:<br/> <span id="ac-savePriKey"></span><span id="ac-savePriKeyQrcode" class="qrcode"></span></div>
+				<br/>
+				<!-- <p>Brain wallet:<br/> <span id="ac-savePriKeyBrain"></span></p> -->
+			</section>
+		</div>
+	</section>
+	<section id="transaction">
+		<nav role="navigation">
+			<ul>
+				<li><a href="#home" id="t-home" >Home</a></li>
+				<li><a href="#accountSetting" id="t-accountSetting" >Account Setting</a></li>
+			</ul>
+		</nav>
+		<h2 class="section-title" id="t-transaction">Send XLM</h2>
+		<div id="t-info" class="qrow"></div>
+		<div class="qrow">
+			<span id="t-fromLabel">From</span>: <span id="t-from"></span><span id="t-balance"></span>
+		</div>
+		<div class="qrow">
+			<select id="t-recipients" class="form-control select-primary" data-toggle="select"></select>
+		</div>
+		<div class="qrow">
+			<input id="t-to" type="text" value="" placeholder="To" class="form-control" />
+		</div>
+		<div id="t-aliasDiv" class="qrow">
+			<input id="t-alias" type="text" value="" placeholder="Alias" class="form-control" />
+		</div>
+		<div class="qrow">
+			<input id="t-amount" type="text" value="" placeholder="Amount" class="form-control" />
+		</div>
+		<div class="qrow">
+			<h3 class="panel-title" id="t-memoTitle">Memo</h3>
+			<select id="t-memoType" class="form-control select-primary" data-toggle="select">
+				<option id="t-none" value="none">None</option>
+				<option value="text">Text</option>
+				<option value="hash">Hash</option>
+				<option value="id">Id</option>
+				<option value="return">Return</option>
+			</select>
+		</div>
+		<div class="qrow">
+			<input id="t-memo" type="text" value="" placeholder="Memo" class="form-control" />
+		</div>
+		<div class="qrow">
+			<div class="form-group">
+				<a href="#t-info" id="t-send" class="btn btn-block btn-lg btn-primary">Send</a>
+			</div>
+		</div>
+	</section>
+	<script type="text/javascript" src="./js/views/common.js"></script>
+	<script type="text/javascript" src="./js/views/home.js"></script>
+	<script type="text/javascript" src="./js/views/manageAccount.js"></script>
+	<script type="text/javascript" src="./js/views/accountSetting.js"></script>
+	<script type="text/javascript" src="./js/views/transaction.js"></script>
+	<script type="text/javascript" src="./js/views/action.js"></script>
+	<script type="text/javascript" src="./js/views/init.js"></script>
+	<script type="text/javascript" src="../browser.js"></script>
+	<script type="text/javascript" src="./js/localization.js"></script>
+  </body>
+</html>

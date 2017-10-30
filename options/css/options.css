@@ -1,0 +1,14 @@
+body {
+  width: 500px;
+}
+
+.errorInfo{
+	color: #e74c3c;
+	border: 2px solid #e74c3c;
+	border-radius: 6px;
+	font-family: "Lato", Helvetica, Arial, sans-serif;
+	font-size: 15px;
+	line-height: 1.467;
+	padding: 8px 12px;
+	height: 42px;
+}

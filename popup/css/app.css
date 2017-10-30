@@ -1,0 +1,82 @@
+html, body {
+  width: 320px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-right: 20px
+}
+
+h3, h2{
+	margin-left: 10px;
+}
+
+.ccc-widget  div{
+    border: none !important;
+}
+
+nav{
+	background-color: #34495e;
+	min-height: 53px;
+	margin-bottom: 30px;
+	margin-top: -15px;
+}
+
+nav ul{
+	margin-left: -21px;
+}
+
+nav li{
+	float: left;
+}
+
+nav li a{
+	display: block;
+	padding: 15px 21px;
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 23px;
+	color: #fff;
+}
+
+.section-title {
+  font: 900 27px/20px "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.panel-title {
+  padding-top: 20px;
+  font: bold 23px/20px "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.qrow {
+	padding-top: 15px;
+	margin-right: 15px;
+	margin-left: 15px;
+}
+
+.qrow select{
+	margin-top: 5px;
+}
+
+.errorInfo{
+	color: #e74c3c;
+	border: 2px solid #e74c3c;
+	border-radius: 6px;
+	font-family: "Lato", Helvetica, Arial, sans-serif;
+	font-size: 15px;
+	line-height: 1.467;
+	padding: 8px 12px;
+	height: 42px;
+}
+
+.successInfo{
+	color: #2ecc71;
+	border: 2px solid #2ecc71;
+	border-radius: 6px;
+	font-family: "Lato", Helvetica, Arial, sans-serif;
+	font-size: 15px;
+	line-height: 1.467;
+	padding: 8px 12px;
+	height: 42px;
+}
+
+#t-balance {
+	padding-left: 15px;
+}

@@ -1,0 +1,11 @@
+#accountSetting{
+	display: none;
+}
+
+#ac-saveAccount, #ac-saveAccount .panel-title, #ac-saveAccount .qrow{
+	display: block;
+}
+
+.navbar, .section-title, .panel-title, .qrow{
+	display: none;
+}
