@@ -3,7 +3,7 @@ class KeyPairManager {
 		this.keyPairs = [];
 	}
 	init(text){
-		this.keyPairs = [];
+		this.clear();
 		let str = text.split("|");
 		for(let i =1; i < str.length; i++){
 			let start = 0;
@@ -19,6 +19,13 @@ class KeyPairManager {
 		let text = '';
 		this.keyPairs.forEach(function(record){
 			text += '|' + record.priKey + record.pubKey + record.id;
+		});	
+		return text;
+	}
+	exportPubKey(){
+		let text = '';
+		this.keyPairs.forEach(function(record){
+			text += '|' + record.pubKey + record.id;
 		});	
 		return text;
 	}
@@ -75,5 +82,4 @@ class KeyPairManager {
 	}
 };
 
-var accountManager = new KeyPairManager();
 var recipientManager = new KeyPairManager();

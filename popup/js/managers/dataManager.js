@@ -1,34 +1,40 @@
 var dataManager = {
-	accounts: '',
 	serverUrl : 'https://horizon.stellar.org',
-	inflationPool : 'GBLL6VZVTOSY7NADKK7KHXZFS7HDPDN7TX6T3XN4YIQYYSVYTHMQ6HBE',
 	isPublicNetwork : true,
-	recipients : '',
+	inflationPool : 'GBLL6VZVTOSY7NADKK7KHXZFS7HDPDN7TX6T3XN4YIQYYSVYTHMQ6HBE',
 	currency : 'USD',
 	nonce : '',
 	guardian : '',
+	roAccounts: '',
+	rwAccounts: '',
+	recipients : '',
+	init : function (data){
+		this.setData(data);
+	},
 	setData : function(data){
 		if(data){
-			dataManager.accounts = data.accounts || dataManager.accounts;
 			dataManager.serverUrl = data.serverUrl || dataManager.serverUrl;
-			dataManager.inflationPool = data.inflationPool || dataManager.inflationPool;
 			dataManager.isPublicNetwork = data.isPublicNetwork || dataManager.isPublicNetwork;
-			dataManager.recipients = data.recipients || dataManager.recipients;
+			dataManager.inflationPool = data.inflationPool || dataManager.inflationPool;
 			dataManager.currency = data.currency || dataManager.currency;
-			dataManager.nonce = data.nonce ||  '';
-			dataManager.guardian = data.guardian ||  '';
+			dataManager.nonce = data.nonce ||  dataManager.nonce;
+			dataManager.guardian = data.guardian ||  dataManager.guardian;
+			dataManager.roAccounts = data.roAccounts || dataManager.roAccounts;
+			dataManager.rwAccounts = data.rwAccounts || dataManager.rwAccounts;
+			dataManager.recipients = data.recipients || dataManager.recipients;
 		}
 	},
 	getData : function(){
 		return {
-		  accounts: dataManager.accounts,
 		  serverUrl : dataManager.serverUrl,
-		  inflationPool : dataManager.inflationPool,
 		  isPublicNetwork : dataManager.isPublicNetwork,
-		  recipients : dataManager.recipients,
+		  inflationPool : dataManager.inflationPool,
 		  currency : dataManager.currency,
 		  nonce : dataManager.nonce,
 		  guardian : dataManager.guardian,
+		  roAccounts: dataManager.roAccounts,
+		  rwAccounts: dataManager.rwAccounts,
+		  recipients : dataManager.recipients,
 		}
 	},
 	save : function(){

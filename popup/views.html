@@ -10,13 +10,15 @@
 	<link href="css/screen.css" type="text/css"  rel="stylesheet" media="screen">
 	<script type="text/javascript" src="./js/vendor/stellar-sdk.js"></script>
 	<script type="text/javascript" src="./js/vendor/qrcode.js"></script>
+	<script type="text/javascript" src="./js/vendor/nacl.js"></script>
+	<script type="text/javascript" src="./js/managers/securityManager.js"></script>
 	<script type="text/javascript" src="./js/managers/dataManager.js"></script>
 	<script type="text/javascript" src="./js/managers/stellarGate.js"></script>
 	<script type="text/javascript" src="./js/managers/keyPairManager.js"></script>
+	<script type="text/javascript" src="./js/managers/accountManager.js"></script>
 	<script type="text/javascript" src="./js/managers/tagManager.js"></script>
 	<script type="text/javascript" src="./js/managers/rateManager.js"></script>
   </head>
-
   <body>
 	<section id="home">
 		<div id="h-info" class="qrow"></div>
@@ -31,6 +33,19 @@
 		<div class="qrow">
 			<div class="col-xs-8"><img src="./img/xlm.png" /> XLM</div><div class="col-xs-4" id="h-xlm"></div>
 		</div>
+	</section>
+	<section id="signing">
+		<h2 class="section-title" id="s-signing">Sign in</h2>
+		<div id="s-info" class="qrow"></div>
+		<div class="qrow">
+			<input id="s-password" type="password" value="" placeholder="Password" class="form-control" />
+		</div>
+		<div class="qrow">
+			<div class="form-group">
+				<a href="#" id="s-signin" class="btn btn-block btn-lg btn-primary">Sign in</a>
+			</div>
+		</div>
+		<span id="s-sec" style="display:none;"></span>
 	</section>
 	<section id="manageAccount">
 		<nav role="navigation">
@@ -162,6 +177,7 @@
 	<script type="text/javascript" src="./js/views/manageAccount.js"></script>
 	<script type="text/javascript" src="./js/views/accountSetting.js"></script>
 	<script type="text/javascript" src="./js/views/transaction.js"></script>
+	<script type="text/javascript" src="./js/views/signing.js"></script>
 	<script type="text/javascript" src="./js/views/action.js"></script>
 	<script type="text/javascript" src="./js/views/init.js"></script>
 	<script type="text/javascript" src="../browser.js"></script>

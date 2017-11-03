@@ -5,7 +5,11 @@
     <link rel="stylesheet" href="css/options.css"/>
 	<link href="../popup/css/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 	<link href="../popup/css/vendor/flat-ui/flat-ui.min.css" rel="stylesheet">
+	<script type="text/javascript" src="../popup/js/vendor/stellar-sdk.js"></script>
+	<script type="text/javascript" src="../popup/js/vendor/nacl.js"></script>
 	<script type="text/javascript" src="../popup/js/managers/dataManager.js"></script>
+	<script type="text/javascript" src="../popup/js/managers/stellarGate.js"></script>
+	<script type="text/javascript" src="../popup/js/managers/securityManager.js"></script>
   </head>
   <body>
     <section class="settings">
@@ -45,6 +49,16 @@
 				</select>
 			</div>
 		</div>
+		<div>
+			<h3 id="op-password">Password configuration</h3>
+			<div class="qrow">
+				<input id="oldPassword" type="password" value="" placeholder="Old password" class="form-control" />
+			</div>
+			<div class="qrow">
+				<input id="newPassword" type="password" value="" placeholder="New password" class="form-control" />
+			</div>
+			<div id="infoPassword" class="qrow"></div>
+		</div>
     </section>
 	<section id="credit">
 		<h2>Credit</h2>
@@ -52,5 +66,6 @@
 	</section>
 	<script src="js/options.js"></script>
 	<script type="text/javascript" src="../browser.js"></script>
+	<script src="js/localization.js"></script>
   </body>
 </html>

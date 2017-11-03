@@ -5,6 +5,7 @@ var home = {
 		hideAll();
 		show(home.name);
 		tagManager.cleanInfo(home);
+		signing.lock();
 		
 		tagManager.find(home, 'currency').textContent = rateManager.currency;
 		rateManager.getRate(home.displayRate, home.errorRate);
@@ -12,11 +13,11 @@ var home = {
 		var keysDiv = tagManager.find(home, "keys");
 		keysDiv.innerHTML = '';
 		
-		if(accountManager.keyPairs.length === 0){
+		if(accountManager.accounts().keyPairs.length === 0){
 			keysDiv.appendChild(tagManager.text(browserApi.i18n.getMessage("noAccount")));
 		}
 		
-		accountManager.keyPairs.forEach(function(keyPair){
+		accountManager.accounts().keyPairs.forEach(function(keyPair){
 			let row = tagManager.create("div", {'class' : 'row'});
 			let col = tagManager.create("div", {'class' : 'col-xs-8'});
 			row.appendChild(col);

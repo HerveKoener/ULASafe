@@ -2,16 +2,21 @@ var manageAccount = {
 	id : 'ma-',
 	name : 'manageAccount',
 	display : function(){
-		hideAll();
-		show(manageAccount.name);
-		tagManager.cleanInfo(manageAccount);
-		
-		manageAccount.refreshKeys();
+		if(signing.isLocked()){
+			signing.display(function(){manageAccount.display();});
+		}else{
+			hideAll();
+			show(manageAccount.name);
+			tagManager.cleanInfo(manageAccount);
+			
+			accountManager.unlock(signing.getPassword());
+			manageAccount.refreshKeys();
+		}
 	},
 	refreshKeys : function(){
 		var keysDiv = tagManager.find(manageAccount, "keys");
 		keysDiv.innerHTML = '';
-		accountManager.keyPairs.forEach(function(keyPair){		  
+		accountManager.accounts().keyPairs.forEach(function(keyPair){		  
 			var node = tagManager.create("label", {'id': manageAccount.id+keyPair.pubKey, 'class' : 'checkbox'});
 			node.appendChild(tagManager.create("input", {'type': 'checkbox', 'value' : keyPair.pubKey}));
 			
@@ -28,26 +33,27 @@ var manageAccount = {
 			keysDiv.appendChild(node);
 		});
 		
-		saveKeys();
+		saveKeys(signing.getPassword());
 	},
 	removeKeys : function() {
 		let inputs = tagManager.findAll(manageAccount, "keys input[type='checkbox']");
 		for(let i = 0; i < inputs.length; i++) {
 			if(inputs[i].checked == true){
-				accountManager.remove(inputs[i].value);
+				accountManager.accounts().remove(inputs[i].value);
 			}
 		}
 		manageAccount.refreshKeys();
 	},
 	saveKeys : function() {
 		let node = tagManager.find(manageAccount, 'keys');
-		accountManager.clear();
+		accountManager.accounts().clear();
 		node.childNodes.forEach(function(child){
 			let id = child.childNodes[1].value;
 			let priKey = child.childNodes[3].value;
 			let pubKey = (priKey !== '')?stellarGate.getPubKey(priKey):child.childNodes[2].value;
-			accountManager.push({id:id, priKey:priKey, pubKey:pubKey});
+			accountManager.accounts().push({id:id, priKey:priKey, pubKey:pubKey});
 		});
+		
 		manageAccount.refreshKeys();
 	},
 	toKeyList : function(text){
@@ -77,13 +83,13 @@ var manageAccount = {
 		var newKeys = document.querySelector(pref(manageAccount.id, "new"));
 		let keys = manageAccount.toKeyList(newKeys.value);
 		keys.forEach(function(key){
-			accountManager.add(key);
+			accountManager.accounts().add(key);
 		});
 		manageAccount.refreshKeys();
 		newKeys.value = '';
 	},
 	createKey : function() {
-		accountManager.add(stellarGate.genPriKey());
+		accountManager.accounts().add(stellarGate.genPriKey());
 		manageAccount.refreshKeys();
 	},
 	selectAll : function() {

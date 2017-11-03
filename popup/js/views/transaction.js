@@ -3,11 +3,19 @@ var transaction = {
 	name : 'transaction',
 	current : null,
 	display : function(pubKey){
+		if(signing.isLocked()){
+			signing.display(function(){transaction.display(pubKey);});
+		}else{
+			accountManager.unlock(signing.getPassword());
+			transaction.displayForm(pubKey);
+		}
+	},
+	displayForm : function(pubKey){
 		hideAll();
 		show(transaction.name);
 		tagManager.cleanInfo(transaction);
 		
-		let keyPair = accountManager.find(pubKey);
+		let keyPair = accountManager.accounts().find(pubKey);
 		let from = tagManager.find(transaction, "from");
 		from.innerHTML = '';
 		var abbr = tagManager.create("abbr", {'id': transaction.id + keyPair.pubKey, 'title': keyPair.pubKey});
@@ -56,10 +64,10 @@ var transaction = {
 		let memoType = tagManager.find(transaction, "memoType option:checked").value;
 		let memoValue = tagManager.find(transaction, "memo").value;
 		
-		if(accountManager.isValidPubKey(to) && alias != ''){
+		if(accountManager.accounts().isValidPubKey(to) && alias != ''){
 			recipientManager.push({id:alias, priKey:'', pubKey:to});
-			saveKeys();
-			if(accountManager.isValidPriKey(from)){
+			saveKeys(signing.getPassword());
+			if(accountManager.accounts().isValidPriKey(from)){
 				stellarGate.send(from, to, amount, stellarGate.memo(memoType, memoValue), transaction.sent, transaction.onError);
 			}else{
 				tagManager.error(transaction, browserApi.i18n.getMessage("errorSecretNotValid"));

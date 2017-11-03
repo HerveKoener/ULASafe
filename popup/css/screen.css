@@ -2,6 +2,6 @@
 	display: none;
 }
 
-#manageAccount, #manageVirtualAccount, #accountSetting, #transaction{
+#manageAccount, #manageVirtualAccount, #accountSetting, #transaction, #signing{
 	display: none;
 }

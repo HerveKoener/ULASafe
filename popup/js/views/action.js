@@ -1,5 +1,7 @@
 tagManager.onCLick(home, "add", manageAccount.display);
 
+tagManager.onCLick(signing, "signin", signing.unlock);
+
 tagManager.onCLick(manageAccount, "home", home.display);
 tagManager.onCLick(manageAccount, "removeTop", manageAccount.removeKeys);
 tagManager.onCLick(manageAccount, "removeBottom", manageAccount.removeKeys);

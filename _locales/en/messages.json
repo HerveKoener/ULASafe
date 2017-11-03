@@ -1,0 +1,66 @@
+{
+	"extensionName": {"message": "ULASafe"},
+	"extensionDescription": {"message": "Manage stellar accounts."},
+	"newRecipient": {"message": "New recipient"},
+	"add": {"message": "Add"},
+	"home": {"message": "Home"},
+	"password": {"message": "Password"},
+	"signin": {"message": "Sign in"},
+	"manageAccount": {"message": "Manage accounts"},
+	"updateOrRemoveAccount": {"message": "Update/Remove accounts"},
+	"selectAll": {"message": "Select all"},
+	"removeSelected": {"message": "Remove selected"},
+	"addAccount": {"message": "Add accounts"},
+	"copyPublicPrivate": {"message": "copy/paste public or secret keys"},
+	"createAccount": {"message": "New account"},
+	"transaction": {"message": "Send XLM"},
+	"accountSetting": {"message": "Settings"},
+	"updateAccount": {"message": "Update account"},
+	"freeXLM": {"message": "Get free XLM"},
+	"inflation": {"message": "Join inflation pool"},
+	"exportAccount": {"message": "Export account"},
+	"print": {"message": "Print"},
+	"email": {"message": "Send by email"},
+	"emailSubject": {"message": "Saved stellar account from ULASafe"},
+	"emailBody": {"message": "Here are your public and secret keys for your Stellar account."},
+	"paperWallet": {"message": "Stellar paper wallet"},
+	"publicKey": {"message": "Your public key"},
+	"privateKey": {"message": "Your secret key"},
+	"from": {"message": "From"},
+	"to": {"message": "To"},
+	"alias": {"message": "Alias"},
+	"amount": {"message": "Amount"},
+	"memo": {"message": "Memo"},
+	"none": {"message": "None"},
+	"send": {"message": "Send"},
+	"successSendXLM": {"message": "OK! XLM sent."},
+	"successJoinPool": {"message": "OK! The pool has been joined."},
+	"errorLoadRate": {"message": "Unable to load the rate."},
+	"errorSendXLM": {"message": "Error while sending XLM."},
+	"errorRecipientNotValid": {"message": "The recipient is not valid."},
+	"errorSecretNotValid": {"message": "The secret key is not valid."},
+	"errorJoinPool": {"message": "Error while joining the pool."},
+	"errorOption": {"message": "Error when loading/saving options."},
+	"noAccount": {"message": "No account yet."},
+	"mailto": {
+		"message": "Hi,\n $BODY$\n\nYour public key: $PUBKEY$\n\n\nYour secret key: $PRIKEY$\n\nExport from ULASafe.",
+		"placeholders": {
+			"body" : {
+				"content" : "$1"
+			},
+			"pubkey" : {
+				"content" : "$2"
+			},
+			"prikey" : {
+				"content" : "$3"
+			}
+		}
+	},
+	"option": {"message": "ULASafe options"},
+	"optionServer": {"message": "Manage Stellar server"},
+	"optionInflation": {"message": "Manage inflation pool"},
+	"optionCurrency": {"message": "Default currency"},
+	"optionPassword": {"message": "Password configuration"},
+	"optionOldPassword": {"message": "Old password"},
+	"optionNewPassword": {"message": "New password"}
+}

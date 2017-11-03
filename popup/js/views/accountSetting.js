@@ -2,12 +2,17 @@ var accountSetting = {
 	id : 'ac-',
 	name : 'accountSetting',
 	display : function(pubKey){
-		hideAll();
-		show(accountSetting.name);
-		tagManager.cleanInfo(accountSetting);
-		
-		let keyPair = accountManager.find(pubKey);
-		this.refreshSaveAccount(keyPair);
+		if(signing.isLocked()){
+			signing.display(function(){accountSetting.display(pubKey);});
+		}else{
+			hideAll();
+			show(accountSetting.name);
+			tagManager.cleanInfo(accountSetting);
+			
+			accountManager.unlock(signing.getPassword());
+			let keyPair = accountManager.accounts().find(pubKey);
+			this.refreshSaveAccount(keyPair);
+		}
 	},
 	refreshSaveAccount : function(keyPair){
 		tagManager.find(accountSetting, "name").value = keyPair.id;
@@ -33,7 +38,7 @@ var accountSetting = {
 
 		//TODO priKeyBrai
 		this.displayEmail(keyPair);
-		saveKeys();
+		saveKeys(signing.getPassword());
 	},
 	displayEmail : function(keyPair) {
 		let subject = tagManager.find(accountSetting, 'email-subject').textContent;
@@ -54,14 +59,14 @@ var accountSetting = {
 		
 		let keyPair = {id:id, priKey:priKey, pubKey:pubKey};
 		
-		accountManager.remove(pubKey);
-		accountManager.push(keyPair);
+		accountManager.accounts().remove(pubKey);
+		accountManager.accounts().push(keyPair);
 		
 		accountSetting.refreshSaveAccount(keyPair);
 	},
 	inflation : function(){
 		let priKey = tagManager.find(accountSetting, "prikey").value;
-		if(accountManager.isValidPriKey(priKey)){
+		if(accountManager.accounts().isValidPriKey(priKey)){
 			stellarGate.joinInflationPool(priKey, accountSetting.joined, accountSetting.onError);
 		}else{
 			tagManager.error(accountSetting, browserApi.i18n.getMessage("errorSecretNotValid"));

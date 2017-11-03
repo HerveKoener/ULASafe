@@ -1,13 +1,15 @@
 function updateUI(restoredSettings) {
-	dataManager.setData(restoredSettings.ULASafe);
+	securityManager.init(restoredSettings.ULASafe);
 	
-	rateManager.init(dataManager.currency);
-	accountManager.init(dataManager.accounts);
-	recipientManager.init(dataManager.recipients);
+	let config = securityManager.getConfig();
+	rateManager.init(config.currency);
 	stellarGate.init(
-		dataManager.serverUrl,
-		dataManager.isPublicNetwork,
-		dataManager.inflationPool
+		config.serverUrl,
+		config.isPublicNetwork,
+		config.inflationPool
 	);
+	
+	recipientManager.init(securityManager.getPublicData().recipients);
+	
 	home.display();
 }

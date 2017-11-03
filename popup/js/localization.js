@@ -1,5 +1,8 @@
 tagManager.find(home, "add").textContent = browserApi.i18n.getMessage("add");
 
+tagManager.setAttr(tagManager.find(signing, "password"), {'placeholder' : browserApi.i18n.getMessage("password")});
+tagManager.find(signing, "signin").textContent = browserApi.i18n.getMessage("signin");
+
 tagManager.find(manageAccount, "home").textContent = browserApi.i18n.getMessage("home");
 tagManager.find(manageAccount, "manageAccount").textContent = browserApi.i18n.getMessage("manageAccount");
 tagManager.find(manageAccount, "updateAccount").textContent = browserApi.i18n.getMessage("updateOrRemoveAccount");

@@ -1,0 +1,66 @@
+{
+	"extensionName": {"message": "ULASafe"},
+	"extensionDescription": {"message": "Administrar cuentas de Stellar."},
+	"newRecipient": {"message": "Nuevo destinatario"},
+	"add": {"message": "Añadir"},
+	"home": {"message": "Inicio"},
+	"password": {"message": "Contraseña"},
+	"signin": {"message": "Iniciar sesión"},
+	"manageAccount": {"message": "Administrar cuentas"},
+	"updateOrRemoveAccount": {"message": "Actualizar / Eliminar cuentas"},
+	"selectAll": {"message": "Seleccionar todo"},
+	"removeSelected": {"message": "Eliminar selección"},
+	"addAccount": {"message": "Agregar cuentas"},
+	"copyPublicPrivate": {"message": "copiar / pegar claves públicas o privadas"},
+	"createAccount": {"message": "Nueva cuenta"},
+	"transaction": {"message": "Enviar XLM"},
+	"accountSetting": {"message": "Configuraciones"},
+	"updateAccount": {"message": "Actualizar cuenta"},
+	"freeXLM": {"message": "Quiero XLM gratis"},
+	"inflation": {"message": "Regìstrate la inflation pool"},
+	"exportAccount": {"message": "Exportar una cuenta"},
+	"print": {"message": "impresión"},
+	"email": {"message": "Enviar por correo electrónico"},
+	"emailSubject": {"message": "Cuenta estelar exportada de ULASafe"},
+	"emailBody": {"message": "Estas son sus claves públicas y privadas para su cuenta Stellar."},
+	"paperWallet": {"message": "Cartera Stellar de papel"},
+	"publicKey": {"message": "Llave pública:"},
+	"privateKey": {"message": "Llave privada"},
+	"from": {"message": "De"},
+	"to": {"message": "a"},
+	"alias": {"message": "Alias"},
+	"amount": {"message": "Cantidad"},
+	"memo": {"message": "Memo"},
+	"none": {"message": "Nada"},
+	"send": {"message": "Enviar"},
+	"successSendXLM": {"message": "OK! XLM enviado."},
+	"successJoinPool": {"message": "OK! El pool se ha unido."},
+	"errorLoadRate": {"message": "No se pueden cargar las tarifas."},
+	"errorSendXLM": {"message": "Error al enviar XLM."},
+	"errorRecipientNotValid": {"message": "El destinatario no es válido."},
+	"errorSecretNotValid": {"message": "La clave privada no es válida."},
+	"errorJoinPool": {"message": "Inflation pool: Error."},
+	"errorOption": {"message": "Error al cargar / guardar opciones."},
+	"noAccount": {"message": "No tienes cuenta aún."},
+	"mailto": {
+		"message": "Hola!\n $BODY$\n\nLlave pública: $PUBKEY$\n\n\nLlave privada: $PRIKEY$\n\nExportar desde ULASafe.",
+		"placeholders": {
+			"body" : {
+				"content" : "$1"
+			},
+			"pubkey" : {
+				"content" : "$2"
+			},
+			"prikey" : {
+				"content" : "$3"
+			}
+		}
+	},
+	"option": {"message": "ULASafe options"},
+	"optionServer": {"message": "Administrar el servidor de Stellar"},
+	"optionInflation": {"message": "Administrar el inflation pool"},
+	"optionCurrency": {"message": "Moneda predeterminada"},
+	"optionPassword": {"message": "Configuración de contraseña"},
+	"optionOldPassword": {"message": "Contraseña anterior"},
+	"optionNewPassword": {"message": "Nueva contraseña"}
+}

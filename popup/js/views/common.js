@@ -1,9 +1,16 @@
 const interfaces = [];
 
-function saveKeys(){
-	dataManager.accounts = accountManager.toText();
-	dataManager.recipients = recipientManager.toText();
-	dataManager.save();
+function saveKeys(password){	
+	let privateData = securityManager.getPrivateData(password);
+	privateData.privateKeys = accountManager.accounts().toText();
+	securityManager.setPrivateData(privateData, password);
+	
+	let publicData = securityManager.getPublicData();
+	publicData.accounts = accountManager.accounts().exportPubKey();
+	publicData.recipients = recipientManager.toText();
+	securityManager.setPublicData(publicData);
+	
+	securityManager.save();
 }
 
 function pref(id, key) {
