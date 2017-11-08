@@ -4,20 +4,22 @@
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="css/app.css"/>
-	<link href="css/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-	<link href="css/vendor/flat-ui/flat-ui.min.css" rel="stylesheet">
 	<link href="css/print.css" type="text/css"  rel="stylesheet" media="print">
 	<link href="css/screen.css" type="text/css"  rel="stylesheet" media="screen">
-	<script type="text/javascript" src="./js/vendor/stellar-sdk.js"></script>
-	<script type="text/javascript" src="./js/vendor/qrcode.js"></script>
-	<script type="text/javascript" src="./js/vendor/nacl.js"></script>
-	<script type="text/javascript" src="./js/managers/securityManager.js"></script>
-	<script type="text/javascript" src="./js/managers/dataManager.js"></script>
-	<script type="text/javascript" src="./js/managers/stellarGate.js"></script>
-	<script type="text/javascript" src="./js/managers/keyPairManager.js"></script>
-	<script type="text/javascript" src="./js/managers/accountManager.js"></script>
-	<script type="text/javascript" src="./js/managers/tagManager.js"></script>
-	<script type="text/javascript" src="./js/managers/rateManager.js"></script>
+	
+	<link href="../common/css/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="../common/css/vendor/flat-ui/flat-ui.min.css" rel="stylesheet">
+	
+	<script type="text/javascript" src="../common/js/vendor/stellar-sdk.js"></script>
+	<script type="text/javascript" src="../common/js/vendor/qrcode.js"></script>
+	<script type="text/javascript" src="../common/js/vendor/nacl.js"></script>
+	<script type="text/javascript" src="../common/js/service/securityService.js"></script>
+	<script type="text/javascript" src="../common/js/service/dataService.js"></script>
+	<script type="text/javascript" src="../common/js/service/stellarGate.js"></script>
+	<script type="text/javascript" src="../common/js/service/keyPairManager.js"></script>
+	<script type="text/javascript" src="../common/js/service/accountService.js"></script>
+	<script type="text/javascript" src="../common/js/service/tagService.js"></script>
+	<script type="text/javascript" src="../common/js/service/rateService.js"></script>
   </head>
   <body>
 	<section id="home">
@@ -111,6 +113,15 @@
 			</div>
 		</div>
 		<div>
+			<h3 class="panel-title" id="ac-mergeAccount">Merge account</h3>
+			<div class="qrow">
+				<select id="ac-mergeFrom" class="form-control select-primary" data-toggle="select"></select>
+			</div>
+			<div class="qrow">
+				<a href="#ac-info" id="ac-merge" class="btn btn-block btn-lg btn-primary">Merge</a>
+			</div>
+		</div>
+		<div>
 			<h3 class="panel-title" id="ac-export">Export account</h3>
 			<div class="qrow">
 				<a href="#ac-print" id="ac-print" class="btn btn-block btn-lg btn-primary">Print</a>
@@ -137,12 +148,15 @@
 			</ul>
 		</nav>
 		<h2 class="section-title" id="t-transaction">Send XLM</h2>
-		<div id="t-info" class="qrow"></div>
 		<div class="qrow">
-			<span id="t-fromLabel">From</span>: <span id="t-from"></span><span id="t-balance"></span>
+			<span id="t-fromLabel">From</span>: <span id="t-from"></span><span id="t-balance"></span> XLM
+		</div>
+		<div class="qrow">
+			<label class="switch"><input id="t-switch" type="checkbox" checked><div class="slider round"><span id="on">Saved</span><span id="off">On page</span></div></label>
 		</div>
 		<div class="qrow">
 			<select id="t-recipients" class="form-control select-primary" data-toggle="select"></select>
+			<select id="t-pagekeys" class="form-control select-primary" data-toggle="select"></select>
 		</div>
 		<div class="qrow">
 			<input id="t-to" type="text" value="" placeholder="To" class="form-control" />
@@ -166,11 +180,18 @@
 		<div class="qrow">
 			<input id="t-memo" type="text" value="" placeholder="Memo" class="form-control" />
 		</div>
+		<div id="t-info" class="qrow"></div>
 		<div class="qrow">
 			<div class="form-group">
-				<a href="#t-info" id="t-send" class="btn btn-block btn-lg btn-primary">Send</a>
+				<a href="#t-signature" id="t-sign" class="btn btn-block btn-lg btn-primary">Sign</a>
 			</div>
 		</div>
+		<div class="qrow"><div class="form-group">
+				<textarea id="t-signature" ></textarea>
+		</div></div>
+		<div class="qrow"><div class="form-group">
+			<a href="#info" id="t-send"class="btn btn-block btn-lg btn-primary" >Send</a>
+		</div></div>
 	</section>
 	<script type="text/javascript" src="./js/views/common.js"></script>
 	<script type="text/javascript" src="./js/views/home.js"></script>
@@ -181,6 +202,7 @@
 	<script type="text/javascript" src="./js/views/action.js"></script>
 	<script type="text/javascript" src="./js/views/init.js"></script>
 	<script type="text/javascript" src="../browser.js"></script>
+	<script type="text/javascript" src="../storage.js"></script>
 	<script type="text/javascript" src="./js/localization.js"></script>
   </body>
 </html>

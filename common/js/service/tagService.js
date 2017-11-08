@@ -1,4 +1,4 @@
-var tagManager = {
+var tagService = {
 	create : function(type, conf){
 		var node = document.createElement(type);
 		this.setAttr(node,conf);

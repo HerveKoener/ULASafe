@@ -6,3 +6,4 @@ document.querySelector("#op-currency").textContent = browserApi.i18n.getMessage(
 document.querySelector("#op-password").textContent = browserApi.i18n.getMessage("optionPassword");
 document.querySelector("#oldPassword").setAttribute('placeholder',  browserApi.i18n.getMessage("optionOldPassword"));
 document.querySelector("#newPassword").setAttribute('placeholder',  browserApi.i18n.getMessage("optionNewPassword"));
+document.querySelector("#passphrase").textContent = browserApi.i18n.getMessage("password");

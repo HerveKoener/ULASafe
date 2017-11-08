@@ -7,27 +7,27 @@ var manageAccount = {
 		}else{
 			hideAll();
 			show(manageAccount.name);
-			tagManager.cleanInfo(manageAccount);
+			tagService.cleanInfo(manageAccount);
 			
-			accountManager.unlock(signing.getPassword());
+			accountService.unlock(signing.getPassword());
 			manageAccount.refreshKeys();
 		}
 	},
 	refreshKeys : function(){
-		var keysDiv = tagManager.find(manageAccount, "keys");
+		var keysDiv = tagService.find(manageAccount, "keys");
 		keysDiv.innerHTML = '';
-		accountManager.accounts().keyPairs.forEach(function(keyPair){		  
-			var node = tagManager.create("label", {'id': manageAccount.id+keyPair.pubKey, 'class' : 'checkbox'});
-			node.appendChild(tagManager.create("input", {'type': 'checkbox', 'value' : keyPair.pubKey}));
+		accountService.accounts().keyPairs.forEach(function(keyPair){		  
+			var node = tagService.create("label", {'id': manageAccount.id+keyPair.pubKey, 'class' : 'checkbox'});
+			node.appendChild(tagService.create("input", {'type': 'checkbox', 'value' : keyPair.pubKey}));
 			
 			var children = [
-				tagManager.create("input", {'type': 'text', 'value' : keyPair.id, 'class' : 'form-control'}),
-				tagManager.create("input", {'type': 'text', 'value' : keyPair.pubKey, 'class' : 'form-control'}),
-				tagManager.create("input", {'type': 'text', 'value' : keyPair.priKey, 'class' : 'form-control'})
+				tagService.create("input", {'type': 'text', 'value' : keyPair.id, 'class' : 'form-control'}),
+				tagService.create("input", {'type': 'text', 'value' : keyPair.pubKey, 'class' : 'form-control'}),
+				tagService.create("input", {'type': 'text', 'value' : keyPair.priKey, 'class' : 'form-control'})
 			];
 			
 			children.forEach(function(child){
-				tagManager.addEvent(child, 'blur', manageAccount.saveKeys);
+				tagService.addEvent(child, 'blur', manageAccount.saveKeys);
 				node.appendChild(child);
 			});
 			keysDiv.appendChild(node);
@@ -36,22 +36,22 @@ var manageAccount = {
 		saveKeys(signing.getPassword());
 	},
 	removeKeys : function() {
-		let inputs = tagManager.findAll(manageAccount, "keys input[type='checkbox']");
+		let inputs = tagService.findAll(manageAccount, "keys input[type='checkbox']");
 		for(let i = 0; i < inputs.length; i++) {
 			if(inputs[i].checked == true){
-				accountManager.accounts().remove(inputs[i].value);
+				accountService.accounts().remove(inputs[i].value);
 			}
 		}
 		manageAccount.refreshKeys();
 	},
 	saveKeys : function() {
-		let node = tagManager.find(manageAccount, 'keys');
-		accountManager.accounts().clear();
+		let node = tagService.find(manageAccount, 'keys');
+		accountService.accounts().clear();
 		node.childNodes.forEach(function(child){
 			let id = child.childNodes[1].value;
 			let priKey = child.childNodes[3].value;
 			let pubKey = (priKey !== '')?stellarGate.getPubKey(priKey):child.childNodes[2].value;
-			accountManager.accounts().push({id:id, priKey:priKey, pubKey:pubKey});
+			accountService.accounts().push({id:id, priKey:priKey, pubKey:pubKey});
 		});
 		
 		manageAccount.refreshKeys();
@@ -83,13 +83,13 @@ var manageAccount = {
 		var newKeys = document.querySelector(pref(manageAccount.id, "new"));
 		let keys = manageAccount.toKeyList(newKeys.value);
 		keys.forEach(function(key){
-			accountManager.accounts().add(key);
+			accountService.accounts().add(key);
 		});
 		manageAccount.refreshKeys();
 		newKeys.value = '';
 	},
 	createKey : function() {
-		accountManager.accounts().add(stellarGate.genPriKey());
+		accountService.accounts().add(stellarGate.genPriKey());
 		manageAccount.refreshKeys();
 	},
 	selectAll : function() {

@@ -6,6 +6,6 @@
 	display: block;
 }
 
-.navbar, .section-title, .panel-title, .qrow{
+.navbar, .section-title, .panel-title, .qrow, nav{
 	display: none;
 }

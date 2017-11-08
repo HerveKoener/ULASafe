@@ -1,16 +1,16 @@
-var accountManager = {
+var accountService = {
 	_accounts : (new KeyPairManager()),
-	_readOnly : null,
+	_readOnly : undefined,
 	lock : function(){
-		if(!this._readOnly){
-			let data = securityManager.getPublicData();
+		if(this._readOnly !== true){
+			let data = securityService.getPublicData();
 			this._accounts.init(data.roAccounts);
 			this._readOnly = true;
 		}
 	},
 	unlock : function(password){
-		if(this.readOnly){
-			let data = securityManager.getPrivateData(password);
+		if(this._readOnly === true){
+			let data = securityService.getPrivateData(password);
 			this._accounts.init(data.rwAccounts);
 			this._readOnly = false;
 		}

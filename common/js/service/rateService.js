@@ -1,4 +1,4 @@
-var rateManager = {
+var rateService = {
 	server : 'https://min-api.cryptocompare.com/data/pricemulti',
 	currency : 'USD',
 	init : function(currency){
@@ -8,10 +8,10 @@ var rateManager = {
 		var xmlhttp = new XMLHttpRequest();
 
 		xmlhttp.onreadystatechange = function() {
-			if (xmlhttp.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
+			if (xmlhttp.readyState == XMLHttpRequest.DONE) {
 			   if (xmlhttp.status == 200) {
-				let xlm = JSON.parse(xmlhttp.responseText).XLM[rateManager.currency];
-				let btc = JSON.parse(xmlhttp.responseText).BTC[rateManager.currency];
+				let xlm = JSON.parse(xmlhttp.responseText).XLM[rateService.currency];
+				let btc = JSON.parse(xmlhttp.responseText).BTC[rateService.currency];
 				success(btc, xlm);
 			   }else {
 				   error(xmlhttp);
@@ -19,7 +19,7 @@ var rateManager = {
 			}
 		};
 
-		xmlhttp.open("GET", rateManager.server + '?fsyms=XLM,BTC&tsyms='+rateManager.currency, true);
+		xmlhttp.open("GET", rateService.server + '?fsyms=XLM,BTC&tsyms='+rateService.currency, true);
 		xmlhttp.send();
 	}
 };

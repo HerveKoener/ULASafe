@@ -13,17 +13,17 @@ var signing = {
 	displayForm : function(){
 		hideAll();
 		show(signing.name);
-		tagManager.cleanInfo(signing);
+		tagService.cleanInfo(signing);
 	},
 	lock : function(){
-		tagManager.find(signing, 'sec').textContent = '';
-		accountManager.lock();
+		tagService.find(signing, 'sec').textContent = '';
+		accountService.lock();
 	},
 	unlock : function(){
 		if(signing.isLocked()){
-			let password = tagManager.find(signing, 'password').value;
-			if(securityManager.check(password)){
-				tagManager.find(signing, 'sec').textContent = password;
+			let password = tagService.find(signing, 'password').value;
+			if(securityService.check(password)){
+				tagService.find(signing, 'sec').textContent = password;
 			};
 		}
 		
@@ -32,13 +32,13 @@ var signing = {
 		}
 	},
 	isLocked : function(){
-		if(securityManager.isActive()){
-			return tagManager.find(signing, 'sec').textContent === '';
+		if(securityService.isActive()){
+			return tagService.find(signing, 'sec').textContent === '';
 		}
 		return false;
 	},
 	getPassword : function(){
-		return tagManager.find(signing, 'sec').textContent;
+		return tagService.find(signing, 'sec').textContent;
 	}
 };
 

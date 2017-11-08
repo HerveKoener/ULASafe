@@ -8,9 +8,9 @@ class KeyPairManager {
 		for(let i =1; i < str.length; i++){
 			let start = 0;
 			let priKey = (str[i][0] === 'S')?str[i].substring(start, 56):'';
-			start = (priKey.length>0)?priKey.length-1:0;
+			start = (priKey.length>0)?priKey.length:0;
 			let pubKey = str[i].substring(start, priKey.length+56);
-			start = (priKey.length>0)?priKey.length+pubKey.length-1:pubKey.length;
+			start = (priKey.length>0)?priKey.length+pubKey.length:pubKey.length;
 			let id = str[i].substring(start, str[i].length);
 			this.keyPairs.push({id:id, priKey: priKey, pubKey:pubKey});
 		}
@@ -67,9 +67,12 @@ class KeyPairManager {
 				return this.keyPairs[i];
 			}
 		}
+		return undefined;
 	}
 	push(keyPair){
-		this.keyPairs.push(keyPair);
+		if(!this.find(keyPair.pubKey)){
+			this.keyPairs.push(keyPair);
+		}
 	}
 	clear(){
 		this.keyPairs = [];

@@ -1,49 +1,51 @@
-var securityManager = {
+var securityService = {
 	init : function (data){
-		dataManager.init(data);
+		dataService.init(data);
 	},
 	isActive : function(){
-		return dataManager.nonce !== '';
+		return dataService.nonce !== '';
 	},
 	check : function(password){
-		return !this.isActive() || 'guardian' === this._decrypt(dataManager.guardian, password);
+		return !this.isActive() || 'guardian' === this._decrypt(dataService.guardian, password);
 	},
 	setPublicData : function(data){
 		if(data){
-			dataManager.roAccounts = data.roAccounts;
-			dataManager.recipients = data.recipients;
+			dataService.roAccounts = data.roAccounts;
+			dataService.recipients = data.recipients;
 		}
 	},
 	getPublicData : function(){
 		return {
-		  roAccounts: dataManager.roAccounts,
-		  recipients : dataManager.recipients,
+		  roAccounts: dataService.roAccounts,
+		  recipients : dataService.recipients,
 		}
 	},
 	setPrivateData : function(data, password){
 		if(data){
-			dataManager.rwAccounts = this._crypt(data.rwAccounts, password);
+			dataService.rwAccounts = this._crypt(data.rwAccounts, password);
 		}
 	},
 	getPrivateData : function(password){
 		return {
-			rwAccounts: this._decrypt(dataManager.rwAccounts, password),
+			rwAccounts: this._decrypt(dataService.rwAccounts, password),
 		}
 	},
 	setConfig : function(data){
 		if(data){
-			dataManager.serverUrl = data.serverUrl;
-			dataManager.isPublicNetwork = data.isPublicNetwork;
-			dataManager.inflationPool = data.inflationPool;
-			dataManager.currency = data.currency;
+			dataService.serverUrl = data.serverUrl;
+			dataService.isPublicNetwork = data.isPublicNetwork;
+			dataService.passphrase = data.passphrase;
+			dataService.inflationPool = data.inflationPool;
+			dataService.currency = data.currency;
 		}
 	},
 	getConfig : function(){
 		return {
-		  serverUrl : dataManager.serverUrl,
-		  isPublicNetwork : dataManager.isPublicNetwork,
-		  inflationPool : dataManager.inflationPool,
-		  currency : dataManager.currency,
+		  serverUrl : dataService.serverUrl,
+		  isPublicNetwork : dataService.isPublicNetwork,
+		  passphrase : dataService.passphrase,
+		  inflationPool : dataService.inflationPool,
+		  currency : dataService.currency,
 		}
 	},
 	changePassword : function(oldPassword, newPassword){
@@ -51,11 +53,11 @@ var securityManager = {
 			let data = this.getPrivateData(oldPassword);
 			
 			if(newPassword === ''){
-				dataManager.nonce = '';
-				dataManager.guardian = 'guardian';
+				dataService.nonce = '';
+				dataService.guardian = 'guardian';
 			}else{
-				dataManager.nonce = stellarGate.genPriKey();
-				dataManager.guardian = this._crypt('guardian', newPassword);
+				dataService.nonce = stellarGate.genPriKey();
+				dataService.guardian = this._crypt('guardian', newPassword);
 			}
 			
 			this.setPrivateData(data, newPassword);
@@ -65,13 +67,13 @@ var securityManager = {
 	},
 	save : function(){
 		browserApi.storage.local.set({
-			ULASafe: dataManager.getData()
+			ULASafe: dataService.getData()
 		});
 	},
 	_crypt : function(data, password){
 		if(this.isActive()){
-			let key = this._stringToUint8Array(password, dataManager.nonce, 32);
-			let nonce = this._stringToUint8Array(dataManager.nonce, '', 24);
+			let key = this._stringToUint8Array(password, dataService.nonce, 32);
+			let nonce = this._stringToUint8Array(dataService.nonce, '', 24);
 			let cryptedData = this._stringToUint8Array(data, '',data.length);
 			
 			return this._toHex(nacl.secretbox(cryptedData, nonce, key));
@@ -81,8 +83,8 @@ var securityManager = {
 	},
 	_decrypt : function(data, password){
 		if(data !== '' && this.isActive()){
-			let key = this._stringToUint8Array(password, dataManager.nonce, 32);
-			let nonce = this._stringToUint8Array(dataManager.nonce, '', 24);
+			let key = this._stringToUint8Array(password, dataService.nonce, 32);
+			let nonce = this._stringToUint8Array(dataService.nonce, '', 24);
 			return new TextDecoder("utf-8").decode(nacl.secretbox.open(this._fromHex(data), nonce, key));
 		}
 		
