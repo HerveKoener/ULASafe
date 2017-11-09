@@ -73,8 +73,20 @@ var transaction = {
 		if(pubKey !== 'new'){
 			let keyPair = recipientManager.find(pubKey);
 			alias = keyPair.id;
+			tagService.setAttr(tagService.find(transaction, "removeRecipient"), {'style' : 'display: inline;'});
+			tagService.setAttr(tagService.find(transaction, "recipients"), {'style' : 'display: inline-block; width: 85%;'});
+		}else{
+			tagService.setAttr(tagService.find(transaction, "recipients"), {'style' : 'display: block; width: 100%;'});
+			tagService.setAttr(tagService.find(transaction, "removeRecipient"), {'style' : 'display: none;'});
 		}
 		transaction.updateRecipient(pubKey, alias);
+	},
+	removeRecipient : function(){
+		let to = tagService.find(transaction, "to").value;
+		recipientManager.remove(to);
+		transaction.selectRecipient('new');
+		saveKeys(signing.getPassword());
+		transaction.loadRecipients();
 	},
 	updateRecipient(pubKey, alias){
 		if(pubKey === 'new'){
@@ -93,8 +105,9 @@ var transaction = {
 	},
 	switchRecipient(){
 		transaction.updateRecipient('new', '');
+		tagService.setAttr(tagService.find(transaction, "removeRecipient"), {'style' : 'display: none;'});
 		if(tagService.find(transaction, "switch").checked){
-			tagService.setAttr(tagService.find(transaction, "recipients"), {'style' : 'display: block;'});
+			tagService.setAttr(tagService.find(transaction, "recipients"), {'style' : 'display: block; width: 100%;'});
 			tagService.setAttr(tagService.find(transaction, "pagekeys"), {'style' : 'display: none;'});
 		}else{
 			tagService.setAttr(tagService.find(transaction, "recipients"), {'style' : 'display: none;'});
@@ -148,7 +161,7 @@ var transaction = {
 	toogleForm(disable){
 		let disabled = disable ? 'disabled' : '';
 		tagService.setAttr(tagService.find(transaction, "switch"), {'disabled' : disabled});
-		tagService.setAttr(tagService.find(transaction, "recipients"), {'disabled' : disabled});
+		tagService.setAttr(tagService.find(transaction, "recipients"), {'disabled' : disabled, 'style' : 'display: block; width: 100%;'});
 		tagService.setAttr(tagService.find(transaction, "pagekeys"), {'disabled' : disabled});
 		tagService.setAttr(tagService.find(transaction, "to"), {'disabled' : disabled});
 		tagService.setAttr(tagService.find(transaction, "alias"), {'disabled' : disabled});
@@ -161,6 +174,7 @@ var transaction = {
 		let displaySend = disable ? 'block' : 'none';
 		tagService.setAttr(tagService.find(transaction, "signature").parentNode, {'style' : 'display: '+displaySend+';'});
 		tagService.setAttr(tagService.find(transaction, "send").parentNode, {'style' : 'display: '+displaySend+';'});
+		tagService.setAttr(tagService.find(transaction, "removeRecipient"), {'style' : 'display: none;'});
 	},
 	displayBalance(pubKey, balance){
 		var node = tagService.find(transaction, 'balance');

@@ -38,7 +38,7 @@
 	"sign": {"message": "Signer"},
 	"send": {"message": "Envoyer"},
 	"successSendXLM": {"message": "OK! XLM envoyés."},
-	"successJoinPool": {"message": "OK! l'inflation pool est rejpointe."},
+	"successJoinPool": {"message": "OK! l'inflation pool est rejointe."},
 	"successMerge": {"message": "OK! Comptes fusionnés."},
 	"errorMerge": {"message": "Fusion impossible."},
 	"errorLoadRate": {"message": "Impossible de charger les ratios."},

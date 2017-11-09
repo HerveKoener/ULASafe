@@ -23,5 +23,6 @@ tagService.addEvent(tagService.find(accountSetting, 'pubkey'), 'blur', accountSe
 tagService.onCLick(transaction, "home", home.display);
 tagService.onCLick(transaction, "accountSetting", function(){accountSetting.display(transaction.current.pubKey);});
 tagService.onCLick(transaction, "switch", transaction.switchRecipient);
+tagService.onCLick(transaction, "removeRecipient", transaction.removeRecipient);
 tagService.onCLick(transaction, "sign", transaction.sign);
 tagService.onCLick(transaction, "send", transaction.send);

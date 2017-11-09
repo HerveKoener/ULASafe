@@ -11,6 +11,8 @@ var accountSetting = {
 			
 			accountService.unlock(signing.getPassword());
 			let keyPair = accountService.accounts().find(pubKey);
+			tagService.setAttr(tagService.find(accountSetting, "inflation").parentNode, {'style' : 'display: block;'});
+			tagService.setAttr(tagService.find(accountSetting, "merge").parentNode, {'style' : 'display: block;'});
 			this.refreshSaveAccount(keyPair);
 		}
 	},
@@ -64,11 +66,11 @@ var accountSetting = {
 		});
 		
 		if(otherAccounts.length === 0){
-			var node = tagService.create("option", {'value': ''});
+			var node = tagService.create("option", {'value': 'noAccount'});
 			node.appendChild(tagService.text(browserApi.i18n.getMessage("noAccount")));
 			select.appendChild(node);
 		}else{
-			var node = tagService.create("option", {'value': ''});
+			var node = tagService.create("option", {'value': 'noAccount'});
 			node.appendChild(tagService.text(browserApi.i18n.getMessage("seeMore")));
 			select.appendChild(node);
 			
@@ -99,31 +101,37 @@ var accountSetting = {
 	inflation : function(){
 		let priKey = tagService.find(accountSetting, "prikey").value;
 		if(accountService.accounts().isValidPriKey(priKey)){
-			stellarGate.joinInflationPool(priKey, accountSetting.joined, accountSetting.onError);
+			tagService.setAttr(tagService.find(accountSetting, "inflation").parentNode, {'style' : 'display: none;'});
+			stellarGate.joinInflationPool(priKey, accountSetting.joined, accountSetting.inflationError);
 		}else{
 			tagService.error(accountSetting, browserApi.i18n.getMessage("errorSecretNotValid"));
 		}
 	},
 	joined(){
-		tagService.info(accountSetting, browserApi.i18n.getMessage("successJoinPool"));
+		tagService.setAttr(tagService.find(accountSetting, "inflation").parentNode, {'style' : 'display: block;'});
+		tagService.success(accountSetting, browserApi.i18n.getMessage("successJoinPool"));
 	},
 	merge : function(){
 		let from = tagService.find(accountSetting, "mergeFrom option:checked").value;
-		if(from !== ''){
+		if(from !== 'noAccount'){
+			tagService.setAttr(tagService.find(accountSetting, "merge").parentNode, {'style' : 'display: none;'});
 			stellarGate.merge(from, tagService.find(accountSetting, "pubkey").value, accountSetting.merged, accountSetting.mergeError);
 		}
 	},
 	merged(){
-		tagService.info(accountSetting, browserApi.i18n.getMessage("successMerge"));
+		tagService.success(accountSetting, browserApi.i18n.getMessage("successMerge"));
+		tagService.setAttr(tagService.find(accountSetting, "merge").parentNode, {'style' : 'display: block;'});
 		accountSetting.displayOtherAccount();
 	},
-	onError(error){
+	inflationError(error){
 		console.log(error);
 		tagService.error(accountSetting, browserApi.i18n.getMessage("errorJoinPool"));
+		tagService.setAttr(tagService.find(accountSetting, "inflation").parentNode, {'style' : 'display: block;'});
 	},
 	mergeError(error){
 		console.log(error);
 		tagService.error(accountSetting, browserApi.i18n.getMessage("errorMerge"));
+		tagService.setAttr(tagService.find(accountSetting, "merge").parentNode, {'style' : 'display: block;'});
 	}
 };
 

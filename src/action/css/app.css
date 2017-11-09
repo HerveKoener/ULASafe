@@ -81,6 +81,10 @@ nav li a{
 	padding-left: 15px;
 }
 
+#t-removeRecipient {
+	display: none;
+}
+
 /*Switch*/
 .switch {
   position: relative;

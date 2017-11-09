@@ -1,0 +1,1 @@
+browserApi.storage.local.get().then(updateUI, onError);
