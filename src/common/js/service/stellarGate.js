@@ -13,13 +13,35 @@ var stellarGate = {
 			StellarSdk.Network.use(new StellarSdk.Network(config.passphrase)); 
 		}
 	},
+	findFederation : function(address, success, error){
+		if(this.isValidPubKey(address)){
+			success(address);
+		}else if(this.isValidFederation(address)){
+			let server =address.split("*")[1];
+			var xmlhttp = new XMLHttpRequest();
+
+			xmlhttp.onreadystatechange = function() {
+				if (xmlhttp.readyState == XMLHttpRequest.DONE) {
+				   if (xmlhttp.status == 200) {
+						success(JSON.parse(xmlhttp.responseText).account_id);
+				   }else {
+					   error(address, {data : xmlhttp});
+				   }
+				}
+			};
+			xmlhttp.open("GET", 'https://' + server + '/federation?q=' + encodeURIComponent(address) + '&type=name', true);
+			xmlhttp.send();
+		}else{
+			error(address, {data : { status : 404, statusText : 'Federation address not found' }});
+		}
+	},
 	getBalance : function(pubKey, success, error){
 		stellarGate.server.loadAccount(pubKey)
 			.then(function(account){
-				success(pubKey, account.balances[0].balance);
+				success(account.balances[0].balance);
 			})
 			.catch(function(exception){
-				error(pubKey, exception);
+				error(exception);
 			});
 	},
 	merge : function(fromPriKey, toPubKey, success, error){
@@ -84,11 +106,13 @@ var stellarGate = {
 	},
 	sendOrCreate : function(priKey, destination, amount, memo, success, error){
 		stellarGate.server.loadAccount(destination)
-			.catch(StellarSdk.NotFoundError, function (e) {
-				stellarGate.create(priKey, destination, amount, memo, success, error);
-			})
 			.then(function() {
 				stellarGate.send(priKey, destination, amount, memo, success, error);
+				next();
+			})
+			.catch(StellarSdk.NotFoundError, function (e) {
+				stellarGate.create(priKey, destination, amount, memo, success, error);
+				next();
 			});
 	},
 	create : function(priKey, destination, amount, memo, success, error){
@@ -153,5 +177,26 @@ var stellarGate = {
 	getPubKey : function(priKey){
 		let keypair = StellarSdk.Keypair.fromSecret(priKey);
 		return keypair.publicKey();
+	},
+	isValidPriKey(priKey){
+		return (priKey && (new RegExp(stellarGate.priKeyRegex())).test(priKey));
+	},
+	isValidPubKey(pubKey){
+		return (pubKey && (new RegExp(stellarGate.pubKeyRegex())).test(pubKey));
+	},
+	isValidFederation(address){
+		if(!address && address.split("*").length != 2){
+			return false;
+		}
+		return (new RegExp(stellarGate.federatioRegex())).test(address);
+	},
+	priKeyRegex(){
+		return 'S[A-Z|0-9]{55}';
+	},
+	pubKeyRegex(){
+		return 'G[A-Z|0-9]{55}';
+	},
+	federatioRegex(){
+		return '[^\\s<\\*>]+\\*[^\\*\\s\\/&$\\.\\?#]+\\.[^\\*\\s\\/$&\\?#]+';
 	}
 }

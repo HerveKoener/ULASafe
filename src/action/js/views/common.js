@@ -13,10 +13,6 @@ function saveKeys(password){
 	securityService.save();
 }
 
-function pref(id, key) {
-	return '#'+id+key;
-}
-
 function hideAll(){
 	interfaces.forEach(function(id){
 		hide(id);

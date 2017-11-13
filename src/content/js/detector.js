@@ -1,4 +1,4 @@
-var publicKeyRegex = /(G[A-Z|0-9]{55})/mgi;
+var publicKeyRegex = /(G[A-Z|0-9]{55})|([^\s<\*>]+\*[^\*\s\/&$\.\?#]+\.[^\*\s\/$&\?#]+)/g;
 
 browserApi.runtime.onMessage.addListener(
     function(message, sender, sendResponse) {

@@ -2,12 +2,12 @@ var transaction = {
 	id : 't-',
 	name : 'transaction',
 	current : null,
-	display : function(pubKey){
+	display : function(key){
 		if(signing.isLocked()){
-			signing.display(function(){transaction.display(pubKey);});
+			signing.display(function(){transaction.display(key);});
 		}else{
 			accountService.unlock(signing.getPassword());
-			transaction.displayForm(pubKey);
+			transaction.displayForm(key);
 		}
 	},
 	loadPagePublicKeys(){		
@@ -32,7 +32,7 @@ var transaction = {
 			});
 		});
 	},
-	displayForm : function(pubKey){
+	displayForm : function(key){
 		hideAll();
 		show(transaction.name);
 		tagService.cleanInfo(transaction);
@@ -40,16 +40,27 @@ var transaction = {
 		tagService.setAttr(tagService.find(transaction, "pagekeys"), {'style' : 'display: none;'});
 		transaction.toogleForm(false);
 		
-		let keyPair = accountService.accounts().find(pubKey);
 		let from = tagService.find(transaction, "from");
 		from.innerHTML = '';
-		var abbr = tagService.create("abbr", {'id': transaction.id + keyPair.pubKey, 'title': keyPair.pubKey});
-		abbr.appendChild(tagService.text(keyPair.id));
-		from.appendChild(abbr);
-		stellarGate.getBalance(keyPair.pubKey, transaction.displayBalance, transaction.balanceError);
+		
+		let keyPair = accountService.accounts().create({pubKey : key});
+		keyPair = accountService.accounts().find(keyPair);
+		if(keyPair){
+			
+			var abbr = tagService.create("abbr", {'id': transaction.id + key, 'title': key});
+			abbr.appendChild(tagService.text(keyPair.id));
+			from.appendChild(abbr);
+
+			stellarGate.findFederation(
+				key,
+				function(pubKey){
+					stellarGate.getBalance(pubKey, function(balance){transaction.displayBalance(key, balance);}, function(error){transaction.balanceError(key, error);});
+				},
+				transaction.federationError
+			);
+		}
 		
 		transaction.current = keyPair;
-		
 		transaction.loadRecipients();
 	},
 	loadRecipients(){
@@ -62,16 +73,18 @@ var transaction = {
 		recipientsSelect.appendChild(node);
 		
 		recipientManager.keyPairs.forEach(function(keyPair){
-			var node = tagService.create("option", {'value': keyPair.pubKey});
+			let key = (keyPair.pubKey !== '') ? keyPair.pubKey : keyPair.federation;
+			var node = tagService.create("option", {'value': key});
 			node.appendChild(tagService.text(keyPair.id));
-			tagService.addEvent(node, 'click', function(){transaction.selectRecipient(keyPair.pubKey);});
+			tagService.addEvent(node, 'click', function(){transaction.selectRecipient(key);});
 			recipientsSelect.appendChild(node);
 		});
 	},
-	selectRecipient : function(pubKey){
+	selectRecipient : function(key){
 		let alias = '';
-		if(pubKey !== 'new'){
-			let keyPair = recipientManager.find(pubKey);
+		if(key !== 'new'){
+			let keyPair = recipientManager.create({pubKey : key});
+			keyPair = recipientManager.find(keyPair);
 			alias = keyPair.id;
 			tagService.setAttr(tagService.find(transaction, "removeRecipient"), {'style' : 'display: inline;'});
 			tagService.setAttr(tagService.find(transaction, "recipients"), {'style' : 'display: inline-block; width: 85%;'});
@@ -79,23 +92,24 @@ var transaction = {
 			tagService.setAttr(tagService.find(transaction, "recipients"), {'style' : 'display: block; width: 100%;'});
 			tagService.setAttr(tagService.find(transaction, "removeRecipient"), {'style' : 'display: none;'});
 		}
-		transaction.updateRecipient(pubKey, alias);
+		transaction.updateRecipient(key, alias);
 	},
 	removeRecipient : function(){
 		let to = tagService.find(transaction, "to").value;
-		recipientManager.remove(to);
+		let keyPair = recipientManager.create({pubKey : to});
+		recipientManager.remove(keyPair);
 		transaction.selectRecipient('new');
 		saveKeys(signing.getPassword());
 		transaction.loadRecipients();
 	},
-	updateRecipient(pubKey, alias){
-		if(pubKey === 'new'){
+	updateRecipient(key, alias){
+		if(key === 'new'){
 			tagService.find(transaction, "to").value = '';
 			tagService.setAttr(tagService.find(transaction, "to"), {'disabled' : ''});
 			tagService.find(transaction, "alias").value = '';
 			tagService.setAttr(tagService.find(transaction, "alias"), {'disabled' : ''});
 		}else{
-			tagService.find(transaction, "to").value = pubKey;
+			tagService.find(transaction, "to").value = key;
 			tagService.setAttr(tagService.find(transaction, "to"), {'disabled' : 'disabled'});
 			tagService.find(transaction, "alias").value = alias;
 			if(alias !== ''){
@@ -116,7 +130,7 @@ var transaction = {
 		}
 	},
 	sign : function(){
-		transaction.call(stellarGate.sign, transaction.signed, transaction.onError);
+		transaction.call(stellarGate.sign, transaction.signed, transaction.sendError);
 	},
 	signed : function(signature){
 		transaction.toogleForm(true);
@@ -126,31 +140,49 @@ var transaction = {
 	send : function(){
 		tagService.setAttr(tagService.find(transaction, "send").parentNode, {'style' : 'display: none;'});
 	
-		transaction.call(stellarGate.sendOrCreate, transaction.sent, transaction.onError);
+		transaction.call(stellarGate.sendOrCreate, transaction.sent, transaction.sendError);
 	},
 	sent : function(){
 		transaction.toogleForm(false);
 		tagService.success(transaction, browserApi.i18n.getMessage("successSendXLM"));
 		transaction.loadRecipients();
-		stellarGate.getBalance(transaction.current.pubKey, transaction.displayBalance, transaction.balanceError);
+		var key = (transaction.current.pubKey !== '') ? transaction.current.pubKey : transaction.current.federation;
+		stellarGate.findFederation(
+			key,
+			function(pubKey){
+				stellarGate.getBalance(pubKey, function(balance){transaction.displayBalance(key, balance);}, function(error){transaction.balanceError(key, error);});
+			},
+			transaction.federationError
+		);
 	},
 	call : function(stellarCall, success, error){
 		let from = transaction.current.priKey;
 		let alias = tagService.find(transaction, "alias").value;
 		let to = tagService.find(transaction, "to").value;
 		let amount = tagService.find(transaction, "amount").value;
-		let memoType = tagService.find(transaction, "memoType option:checked").value;
+		let memoType = tagService.find(transaction, "memoType", "option:checked").value;
 		let memoValue = tagService.find(transaction, "memo").value;
 		
-		if(accountService.accounts().isValidPubKey(to)){
+		if(stellarGate.isValidPubKey(to) || stellarGate.isValidFederation(to)){
 			if(alias != ''){
-				recipientManager.push({id:alias, priKey:'', pubKey:to});
+				let keyPair = accountService.accounts().create({
+					id : alias,
+					priKey : '',
+					pubKey : to
+				});
+				recipientManager.push(keyPair);
 				transaction.updateRecipient(to, alias);
 			}
 			
 			saveKeys(signing.getPassword());
-			if(accountService.accounts().isValidPriKey(from)){
-				stellarCall(from, to, amount, stellarGate.memo(memoType, memoValue), success, error);
+			if(stellarGate.isValidPriKey(from)){
+				stellarGate.findFederation(
+					to,
+					function(pubKey){
+						stellarCall(from, pubKey, amount, stellarGate.memo(memoType, memoValue), success, error);
+					},
+					transaction.federationError
+				);
 			}else{
 				tagService.error(transaction, browserApi.i18n.getMessage("errorSecretNotValid"));
 			}
@@ -192,9 +224,13 @@ var transaction = {
 		node.innerHTML = '';
 		node.appendChild(tagService.text(val));
 	},
-	onError(error){
+	sendError(error){
 		transaction.toogleForm(false);
 		tagService.error(transaction, browserApi.i18n.getMessage("errorSendXLM"));
+	},
+	federationError(address, error){
+		transaction.toogleForm(false);
+		tagService.error(transaction, browserApi.i18n.getMessage("errorFederation"));
 	}
 }
 

@@ -22,7 +22,7 @@ var securityService = {
 	},
 	setPrivateData : function(data, password){
 		if(data){
-			dataService.rwAccounts = this._crypt(data.rwAccounts, password);
+			dataService.rwAccounts = this._encrypt(data.rwAccounts, password);
 		}
 	},
 	getPrivateData : function(password){
@@ -57,7 +57,7 @@ var securityService = {
 				dataService.guardian = 'guardian';
 			}else{
 				dataService.nonce = stellarGate.genPriKey();
-				dataService.guardian = this._crypt('guardian', newPassword);
+				dataService.guardian = this._encrypt('guardian', newPassword);
 			}
 			
 			this.setPrivateData(data, newPassword);
@@ -70,7 +70,7 @@ var securityService = {
 			ULASafe: dataService.getData()
 		});
 	},
-	_crypt : function(data, password){
+	_encrypt : function(data, password){
 		if(this.isActive()){
 			let key = this._stringToUint8Array(password, dataService.nonce, 32);
 			let nonce = this._stringToUint8Array(dataService.nonce, '', 24);

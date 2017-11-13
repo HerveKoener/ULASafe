@@ -1,24 +1,32 @@
 var accountSetting = {
 	id : 'ac-',
 	name : 'accountSetting',
-	display : function(pubKey){
+	display : function(key){
 		if(signing.isLocked()){
-			signing.display(function(){accountSetting.display(pubKey);});
+			signing.display(function(){accountSetting.display(key);});
 		}else{
 			hideAll();
 			show(accountSetting.name);
 			tagService.cleanInfo(accountSetting);
 			
 			accountService.unlock(signing.getPassword());
-			let keyPair = accountService.accounts().find(pubKey);
-			tagService.setAttr(tagService.find(accountSetting, "inflation").parentNode, {'style' : 'display: block;'});
-			tagService.setAttr(tagService.find(accountSetting, "merge").parentNode, {'style' : 'display: block;'});
+			let keyPair = accountService.accounts().create({pubKey:  key});
+			keyPair = accountService.accounts().find(keyPair);
+			tagService.setAttr(tagService.find(accountSetting, "inflation").parentNode, {'style' : ''});
+			tagService.setAttr(tagService.find(accountSetting, "merge").parentNode, {'style' : ''});
 			this.refreshSaveAccount(keyPair);
 		}
 	},
 	refreshSaveAccount : function(keyPair){
+		if(keyPair.inflation === securityService.getConfig().inflationPool){
+			tagService.setAttr(tagService.find(accountSetting, "inflationForm"), {'style' : 'display: none;'});
+		}else{
+			tagService.setAttr(tagService.find(accountSetting, "inflationForm"), {'style' : ''});
+		}
+	
+		let pubKey = (keyPair.pubKey !== '') ? keyPair.pubKey : keyPair.federation;
 		tagService.find(accountSetting, "name").value = keyPair.id;
-		tagService.find(accountSetting, "pubkey").value = keyPair.pubKey;
+		tagService.find(accountSetting, "pubkey").value = pubKey;
 		tagService.find(accountSetting, "prikey").value = keyPair.priKey;
 	
 		let pubKeyText = tagService.find(accountSetting, 'savePubKey');
@@ -33,8 +41,8 @@ var accountSetting = {
 		priKeyQr.innerHTML = '';
 		//priKeyBrain.innerHTML = '';
 		
-		pubKeyText.appendChild(tagService.text(keyPair.pubKey));
-		new QRCode(pubKeyQr, {text: keyPair.pubKey, width: 200, height: 200}); 
+		pubKeyText.appendChild(tagService.text(pubKey));
+		new QRCode(pubKeyQr, {text: pubKey, width: 200, height: 200}); 
 		priKeyText.appendChild(tagService.text(keyPair.priKey));
 		new QRCode(priKeyQr, {text: keyPair.priKey, width: 200, height: 200}); 
 
@@ -50,7 +58,7 @@ var accountSetting = {
 		tagService.setAttr(tagService.find(accountSetting, 'email'), {
 			'href' : 'mailto:?subject='+subject+
 					'&body='+
-					encodeURIComponent(browserApi.i18n.getMessage("mailto", [body, keyPair.pubKey, keyPair.priKey]))
+					encodeURIComponent(browserApi.i18n.getMessage("mailto", [body, (keyPair.pubKey !== '') ? keyPair.pubKey : keyPair.federation, keyPair.priKey]))
 		});
 	},
 	displayOtherAccount : function(){
@@ -87,20 +95,20 @@ var accountSetting = {
 		window.print();
 	},
 	saveKey : function() {
-		let id = tagService.find(accountSetting, "name").value;
-		let priKey = tagService.find(accountSetting, "prikey").value;
-		let pubKey = (priKey !== '')?stellarGate.getPubKey(priKey):tagService.find(accountSetting, "pubkey").value;
+		let keyPair = accountService.accounts().create({
+			id : tagService.find(accountSetting, "name").value,
+			priKey : tagService.find(accountSetting, "prikey").value,
+			pubKey : tagService.find(accountSetting, "pubkey").value
+		});
 		
-		let keyPair = {id:id, priKey:priKey, pubKey:pubKey};
-		
-		accountService.accounts().remove(pubKey);
+		accountService.accounts().remove(keyPair);
 		accountService.accounts().push(keyPair);
 		
 		accountSetting.refreshSaveAccount(keyPair);
 	},
 	inflation : function(){
 		let priKey = tagService.find(accountSetting, "prikey").value;
-		if(accountService.accounts().isValidPriKey(priKey)){
+		if(stellarGate.isValidPriKey(priKey)){
 			tagService.setAttr(tagService.find(accountSetting, "inflation").parentNode, {'style' : 'display: none;'});
 			stellarGate.joinInflationPool(priKey, accountSetting.joined, accountSetting.inflationError);
 		}else{
@@ -108,30 +116,45 @@ var accountSetting = {
 		}
 	},
 	joined(){
-		tagService.setAttr(tagService.find(accountSetting, "inflation").parentNode, {'style' : 'display: block;'});
+		tagService.setAttr(tagService.find(accountSetting, "inflation").parentNode, {'style' : ''});
 		tagService.success(accountSetting, browserApi.i18n.getMessage("successJoinPool"));
+		
+		let keyPair = accountService.accounts().create({pubKey:  tagService.find(accountSetting, "pubkey").value});
+		keyPair = accountService.accounts().find(keyPair);
+		keyPair.inflation = securityService.getConfig().inflationPool;
+		accountSetting.refreshSaveAccount(keyPair);
 	},
 	merge : function(){
-		let from = tagService.find(accountSetting, "mergeFrom option:checked").value;
+		let from = tagService.find(accountSetting, 'mergeFrom', 'option:checked').value;
 		if(from !== 'noAccount'){
 			tagService.setAttr(tagService.find(accountSetting, "merge").parentNode, {'style' : 'display: none;'});
-			stellarGate.merge(from, tagService.find(accountSetting, "pubkey").value, accountSetting.merged, accountSetting.mergeError);
+			
+			stellarGate.findFederation(
+				tagService.find(accountSetting, "pubkey").value,
+				function(pubkey){
+					stellarGate.merge(from, pubkey, accountSetting.merged, accountSetting.mergeError);
+				},
+				accountSetting.federationError
+			);
 		}
 	},
 	merged(){
 		tagService.success(accountSetting, browserApi.i18n.getMessage("successMerge"));
-		tagService.setAttr(tagService.find(accountSetting, "merge").parentNode, {'style' : 'display: block;'});
+		tagService.setAttr(tagService.find(accountSetting, "merge").parentNode, {'style' : ''});
 		accountSetting.displayOtherAccount();
 	},
 	inflationError(error){
-		console.log(error);
 		tagService.error(accountSetting, browserApi.i18n.getMessage("errorJoinPool"));
-		tagService.setAttr(tagService.find(accountSetting, "inflation").parentNode, {'style' : 'display: block;'});
+		tagService.setAttr(tagService.find(accountSetting, "inflation").parentNode, {'style' : ''});
 	},
 	mergeError(error){
-		console.log(error);
 		tagService.error(accountSetting, browserApi.i18n.getMessage("errorMerge"));
-		tagService.setAttr(tagService.find(accountSetting, "merge").parentNode, {'style' : 'display: block;'});
+		tagService.setAttr(tagService.find(accountSetting, "merge").parentNode, {'style' : ''});
+	},
+	federationError(address, error){
+		tagService.error(accountSetting, browserApi.i18n.getMessage("errorFederation"));
+		tagService.setAttr(tagService.find(accountSetting, "merge").parentNode, {'style' : ''});
+		tagService.setAttr(tagService.find(accountSetting, "inflation").parentNode, {'style' : ''});
 	}
 };
 

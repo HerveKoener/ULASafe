@@ -18,14 +18,25 @@ var tagService = {
 			}
 		}
 	},
+	_pref(id, key) {
+		return "[id='"+id+key+"']";
+	},
 	addEvent(node, action, callback){
 		node.addEventListener(action, callback);
 	},
-	find(view, id){
-		return document.querySelector(pref(view.id, id));
+	find(view, id, selector){
+		if(!selector){
+			selector = '';
+		}
+		
+		return document.querySelector(this._pref(view.id, id)+' '+selector);
 	},
-	findAll(view, id){
-		return document.querySelectorAll(pref(view.id, id));
+	findAll(view, id, selector){
+		if(!selector){
+			selector = '';
+		}
+		
+		return document.querySelectorAll(this._pref(view.id, id)+' '+selector);
 	},
 	onCLick(view, id, callback){
 		this.addEvent(this.find(view, id), 'click', callback);

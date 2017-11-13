@@ -11,7 +11,7 @@
 	"selectAll": {"message": "Selecionar tudo"},
 	"removeSelected": {"message": "Remover selecionado"},
 	"addAccount": {"message": "Adicionar contas"},
-	"copyPublicPrivate": {"message": "copiar / colar chaves públicas ou secretas"},
+	"copyPublicPrivate": {"message": "copiar / colar chaves federado, públicas ou secretas"},
 	"createAccount": {"message": "Nova conta"},
 	"transaction": {"message": "Enviar XLM"},
 	"accountSetting": {"message": "Configurações"},
@@ -46,6 +46,7 @@
 	"errorRecipientNotValid": {"message": "O destinatário não é válido."},
 	"errorSecretNotValid": {"message": "A chave secreta não é válida."},
 	"errorOption": {"message": "Erro ao carregar / salvar opções."},
+	"errorFederation": {"message": "Endereço da federação não encontrado."},
 	"errorJoinPool": {"message": "Inflation pool: Erro."},
 	"noAccount": {"message": "Ainda não conta."},
 	"mailto": {
