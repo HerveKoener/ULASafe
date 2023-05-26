@@ -16,4 +16,4 @@ XLM donations are welcome! : GC6ZIWMTBZZ54VWX6SJH4JEHRHWSE245O2EIW26CMGAS6PM2R4J
 
 # License
 
-MIT
+GNU General Public License v3.0
